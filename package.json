@@ -1,0 +1,5 @@
+talant-team/
+├── package.json
+├── app/
+│   ├── layout.jsx
+│   └── page.jsx
