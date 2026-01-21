@@ -1,34 +1,50 @@
-// app/contracts/page.jsx
+"use client";
 
-const dummyContracts = [
-  { id: 1, name: "Shartnoma 1", amount: 500000, status: "Faol" },
-  { id: 2, name: "Shartnoma 2", amount: 750000, status: "Tugagan" },
-];
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
 
 export default function ContractsPage() {
+  const [contracts, setContracts] = useState([]);
+
+  const contractsRef = collection(db, "contracts");
+
+  const fetchContracts = async () => {
+    const snapshot = await getDocs(contractsRef);
+    setContracts(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+  };
+
+  useEffect(() => {
+    fetchContracts();
+  }, []);
+
   return (
     <div style={{ padding: 40, fontFamily: "sans-serif" }}>
       <h1>Shartnomalar ro'yxati</h1>
-      <table border="1" cellPadding="10" style={{ marginTop: 20 }}>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nomi</th>
-            <th>Summasi</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dummyContracts.map((c) => (
-            <tr key={c.id}>
-              <td>{c.id}</td>
-              <td>{c.name}</td>
-              <td>{c.amount.toLocaleString()} so'm</td>
-              <td>{c.status}</td>
+      {contracts.length === 0 ? (
+        <p>Shartnoma yo‘q 😕</p>
+      ) : (
+        <table border="1" cellPadding="10" style={{ marginTop: 20 }}>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nomi</th>
+              <th>Summasi</th>
+              <th>Status</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {contracts.map((c, index) => (
+              <tr key={c.id}>
+                <td>{index + 1}</td>
+                <td>{c.name}</td>
+                <td>{c.amount.toLocaleString()} so‘m</td>
+                <td>{c.status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
