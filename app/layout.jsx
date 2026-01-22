@@ -1,14 +1,12 @@
-// app/layout.jsx
-
 export const metadata = {
   title: "TALANT TEAM",
-  description: "Do'kon boshqaruv tizimi"
+  description: "Savdo va statistika tizimi",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="uz">
-      <body>
+      <body style={{ fontFamily: "sans-serif" }}>
         {children}
       </body>
     </html>
